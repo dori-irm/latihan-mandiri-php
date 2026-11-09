@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Latihan Mandiri Pemrograman Web</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        p.subtitle {
+            color: #7f8c8d;
+            margin-bottom: 25px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #fafafa;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+        .card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .card p {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        .card a {
+            display: inline-block;
+            text-align: center;
+            background-color: #3498db;
+            color: #ffffff;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .card a:hover {
+            background-color: #2980b9;
+        }
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.85em;
+            color: #95a5a6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Latihan Mandiri Pemrograman Web</h1>
+        <p class="subtitle">Pilih salah satu tugas di bawah untuk mengakses aplikasi web yang berjalan secara online.</p>
+
+        <div class="grid">
+            <!-- Soal 1 -->
+            <div class="card">
+                <div>
+                    <h3>1. Kalkulator</h3>
+                    <p>Aplikasi kalkulator interaktif dengan penanganan pembagian dengan nol.</p>
+                </div>
+                <a href="kalkulator.html">Buka Aplikasi</a>
+            </div>
+
+            <!-- Soal 2 -->
+            <div class="card">
+                <div>
+                    <h3>2. Array Mahasiswa</h3>
+                    <p>Menampilkan data 5 mahasiswa dalam tabel HTML dan menghitung rata-rata nilai.</p>
+                </div>
+                <a href="mahasiswa.html">Buka Aplikasi</a>
+            </div>
+
+            <!-- Soal 3 -->
+            <div class="card">
+                <div>
+                    <h3>3. Konversi Nilai</h3>
+                    <p>Pengujian fungsi konversi nilai angka ke huruf mutu (A-E) sesuai skala RPS.</p>
+                </div>
+                <a href="konversi_nilai.html">Buka Aplikasi</a>
+            </div>
+
+            <!-- Soal 4 -->
+            <div class="card">
+                <div>
+                    <h3>4. Kelola Mahasiswa (CRUD)</h3>
+                    <p>Form input dan tabel daftar mahasiswa yang tersimpan di penyimpanan lokal.</p>
+                </div>
+                <a href="crud_pdo.html">Buka Aplikasi</a>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 - Tugas Pemrograman Web | GitHub Pages</p>
+        </footer>
+    </div>
+
+</body>
+</html>
