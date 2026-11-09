@@ -1,28 +1,19 @@
-<?php
-$mahasiswa = [
-    ["nim" => "2024001", "nama" => "Budi Santoso", "nilai" => 85],
-    ["nim" => "2024002", "nama" => "Siti Aminah", "nilai" => 78],
-    ["nim" => "2024003", "nama" => "Rudi Hermawan", "nilai" => 65],
-    ["nim" => "2024004", "nama" => "Dewi Lestari", "nilai" => 90],
-    ["nim" => "2024005", "nama" => "Ahmad Fauzi", "nilai" => 55],
-];
-
-$total_nilai = 0;
-foreach ($mahasiswa as $mhs) {
-    $total_nilai += $mhs['nilai'];
-}
-$rata_rata = $total_nilai / count($mahasiswa);
-?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <title>Daftar Mahasiswa</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        table { border-collapse: collapse; width: 50%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
 </head>
 <body>
     <h2>Daftar Nilai Mahasiswa</h2>
-    <table border="1" cellpadding="8" cellspacing="0">
+    
+    <table>
         <thead>
             <tr>
                 <th>No</th>
@@ -31,22 +22,44 @@ $rata_rata = $total_nilai / count($mahasiswa);
                 <th>Nilai</th>
             </tr>
         </thead>
-        <tbody>
-            <?php foreach ($mahasiswa as $index => $mhs): ?>
-            <tr>
-                <td><?= $index + 1; ?></td>
-                <td><?= htmlspecialchars($mhs['nim']); ?></td>
-                <td><?= htmlspecialchars($mhs['nama']); ?></td>
-                <td><?= $mhs['nilai']; ?></td>
-            </tr>
-            <?php endforeach; ?>
+        <tbody id="tabelMahasiswa">
+            <!-- Data akan dimuat lewat JavaScript -->
         </tbody>
         <tfoot>
             <tr>
                 <th colspan="3">Rata-Rata Nilai</th>
-                <th><?= number_format($rata_rata, 2); ?></th>
+                <th id="rataRata">0</th>
             </tr>
         </tfoot>
     </table>
+
+    <script>
+        const mahasiswa = [
+            { nim: "2024001", nama: "Budi Santoso", nilai: 85 },
+            { nim: "2024002", nama: "Siti Aminah", nilai: 78 },
+            { nim: "2024003", nama: "Rudi Hermawan", nilai: 65 },
+            { nim: "2024004", nama: "Dewi Lestari", nilai: 90 },
+            { nim: "2024005", nama: "Ahmad Fauzi", nilai: 55 },
+        ];
+
+        let tbody = document.getElementById('tabelMahasiswa');
+        let totalNilai = 0;
+        let html = '';
+
+        mahasiswa.forEach((mhs, index) => {
+            totalNilai += mhs.nilai;
+            html += `<tr>
+                <td>${index + 1}</td>
+                <td>${mhs.nim}</td>
+                <td>${mhs.nama}</td>
+                <td>${mhs.nilai}</td>
+            </tr>`;
+        });
+
+        tbody.innerHTML = html;
+
+        let rataRata = totalNilai / mahasiswa.length;
+        document.getElementById('rataRata').innerText = rataRata.toFixed(2);
+    </script>
 </body>
 </html>
