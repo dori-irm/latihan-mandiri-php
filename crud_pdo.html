@@ -1,72 +1,33 @@
-<?php
-// Konfigurasi Database PDO
-$host = 'localhost';
-$dbname = 'db_kuliah';
-$username = 'root';
-$password = '';
-
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Koneksi gagal: " . $e->getMessage());
-}
-
-// Proses Tambah Data dengan Prepared Statement
-$pesan = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nim = trim($_POST['nim']);
-    $nama = trim($_POST['nama']);
-    $nilai = trim($_POST['nilai']);
-
-    if (!empty($nim) && !empty($nama) && $nilai !== '') {
-        $sql = "INSERT INTO mahasiswa (nim, nama, nilai) VALUES (:nim, :nama, :nilai)";
-        $stmt = $pdo->prepare($sql);
-        
-        // Binding parameter untuk keamanan (Mencegah SQL Injection)
-        $stmt->bindParam(':nim', $nim);
-        $stmt->bindParam(':nama', $nama);
-        $stmt->bindParam(':nilai', $nilai, PDO::PARAM_INT);
-
-        if ($stmt->execute()) {
-            $pesan = "Data mahasiswa berhasil ditambahkan!";
-        } else {
-            $pesan = "Gagal menambah data.";
-        }
-    } else {
-        $pesan = "Harap isi semua kolom!";
-    }
-}
-
-// Ambil Semua Data Mahasiswa
-$stmtSelect = $pdo->query("SELECT * FROM mahasiswa ORDER BY id DESC");
-$daftar_mahasiswa = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
-?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Kelola Data Mahasiswa (PDO)</title>
+    <title>Kelola Data Mahasiswa</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        table { border-collapse: collapse; width: 60%; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .success { color: green; margin-bottom: 10px; font-weight: bold; }
+    </style>
 </head>
 <body>
-    <h2>Form Tambah Mahasiswa</h2>
-    <?php if ($pesan != ''): ?>
-        <p style="color: green;"><?= htmlspecialchars($pesan); ?></p>
-    <?php endif; ?>
 
-    <form method="POST">
+    <h2>Form Tambah Mahasiswa</h2>
+    <div id="pesan" class="success"></div>
+
+    <form id="formMahasiswa" onsubmit="tambahMahasiswa(event)">
         <div>
             <label>NIM:</label><br>
-            <input type="text" name="nim" required>
+            <input type="text" id="nim" required>
         </div><br>
         <div>
             <label>Nama:</label><br>
-            <input type="text" name="nama" required>
+            <input type="text" id="nama" required>
         </div><br>
         <div>
             <label>Nilai:</label><br>
-            <input type="number" name="nilai" min="0" max="100" required>
+            <input type="number" id="nilai" min="0" max="100" required>
         </div><br>
         <button type="submit">Simpan Mahasiswa</button>
     </form>
@@ -83,22 +44,74 @@ $daftar_mahasiswa = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
                 <th>Nilai</th>
             </tr>
         </thead>
-        <tbody>
-            <?php if (count($daftar_mahasiswa) > 0): ?>
-                <?php foreach ($daftar_mahasiswa as $row): ?>
-                <tr>
-                    <td><?= $row['id']; ?></td>
-                    <td><?= htmlspecialchars($row['nim']); ?></td>
-                    <td><?= htmlspecialchars($row['nama']); ?></td>
-                    <td><?= $row['nilai']; ?></td>
-                </tr>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <tr>
-                    <td colspan="4">Belum ada data mahasiswa.</td>
-                </tr>
-            <?php endif; ?>
+        <tbody id="tabelMahasiswa">
+            <!-- Data akan dimuat secara dinamis oleh JavaScript -->
         </tbody>
     </table>
+
+    <script>
+        // Mengambil data tersimpan dari browser (localStorage) atau buat array kosong
+        let daftarMahasiswa = JSON.parse(localStorage.getItem('mahasiswa')) || [];
+
+        function renderTabel() {
+            let tbody = document.getElementById('tabelMahasiswa');
+            let html = '';
+
+            if (daftarMahasiswa.length > 0) {
+                // Urutkan dari data terbaru (menyerupai fungsi ORDER BY id DESC)
+                let dataTerbalik = [...daftarMahasiswa].reverse();
+                dataTerbalik.forEach((mhs, index) => {
+                    let idAsli = daftarMahasiswa.length - index;
+                    html += `<tr>
+                        <td>${idAsli}</td>
+                        <td>${escapeHtml(mhs.nim)}</td>
+                        <td>${escapeHtml(mhs.nama)}</td>
+                        <td>${mhs.nilai}</td>
+                    </tr>`;
+                });
+            } else {
+                html = `<tr><td colspan="4">Belum ada data mahasiswa.</td></tr>`;
+            }
+            tbody.innerHTML = html;
+        }
+
+        function tambahMahasiswa(event) {
+            event.preventDefault(); // Mencegah halaman melakukan reload
+
+            let nim = document.getElementById('nim').value.trim();
+            let nama = document.getElementById('nama').value.trim();
+            let nilai = parseInt(document.getElementById('nilai').value);
+
+            if (nim && nama && !isNaN(nilai)) {
+                // Masukkan data baru ke dalam array
+                daftarMahasiswa.push({ nim, nama, nilai });
+                
+                // Simpan ke localStorage agar data tidak hilang saat halaman di-refresh
+                localStorage.setItem('mahasiswa', JSON.stringify(daftarMahasiswa));
+
+                // Tampilkan pesan sukses
+                document.getElementById('pesan').innerText = "Data mahasiswa berhasil ditambahkan!";
+                
+                // Kosongkan kembali form input
+                document.getElementById('formMahasiswa').reset();
+
+                // Perbarui tampilan tabel
+                renderTabel();
+            }
+        }
+
+        // Fungsi keamanan dasar untuk mencegah script berbahaya (mirip htmlspecialchars)
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;")
+                       .replace(/</g, "&lt;")
+                       .replace(/>/g, "&gt;")
+                       .replace(/"/g, "&quot;")
+                       .replace(/'/g, "&#039;");
+        }
+
+        // Jalankan fungsi render saat pertama kali halaman dibuka
+        renderTabel();
+    </script>
+
 </body>
 </html>
