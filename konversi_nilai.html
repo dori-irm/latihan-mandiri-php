@@ -1,27 +1,50 @@
-<?php
-function konversiNilai(int $nilai): string {
-    if ($nilai >= 81 && $nilai <= 100) {
-        return "A";
-    } elseif ($nilai >= 76 && $nilai <= 80) {
-        return "B";
-    } elseif ($nilai >= 61 && $nilai <= 75) {
-        return "C";
-    } elseif ($nilai >= 36 && $nilai <= 60) {
-        return "D";
-    } elseif ($nilai >= 0 && $nilai <= 35) {
-        return "E";
-    } else {
-        return "Nilai Tidak Valid";
-    }
-}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Uji Fungsi Konversi Nilai</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        ul { line-height: 1.6; }
+    </style>
+</head>
+<body>
 
-// Contoh Pengujian Fungsi:
-$contoh_nilai = [85, 78, 65, 45, 20];
+    <h2>Uji Fungsi Konversi Nilai</h2>
+    <ul id="hasilKonversi">
+        <!-- Hasil pengujian akan dimasukkan lewat JavaScript -->
+    </ul>
 
-echo "<h2>Uji Fungsi Konversi Nilai</h2>";
-echo "<ul>";
-foreach ($contoh_nilai as $n) {
-    echo "<li>Nilai <strong>$n</strong> mendapat Huruf Mutu: <strong>" . konversiNilai($n) . "</strong></li>";
-}
-echo "</ul>";
-?>
+    <script>
+        // Fungsi konversi nilai (pengganti fungsi PHP)
+        function konversiNilai(nilai) {
+            if (nilai >= 81 && nilai <= 100) {
+                return "A";
+            } else if (nilai >= 76 && nilai <= 80) {
+                return "B";
+            } else if (nilai >= 61 && nilai <= 75) {
+                return "C";
+            } else if (nilai >= 36 && nilai <= 60) {
+                return "D";
+            } else if (nilai >= 0 && nilai <= 35) {
+                return "E";
+            } else {
+                return "Nilai Tidak Valid";
+            }
+        }
+
+        // Contoh Pengujian Fungsi
+        const contohNilai = [85, 78, 65, 45, 20];
+        let daftarHTML = "";
+
+        contohNilai.forEach(n => {
+            let hurufMutu = konversiNilai(n);
+            daftarHTML += `<li>Nilai <strong>${n}</strong> mendapat Huruf Mutu: <strong>${hurufMutu}</strong></li>`;
+        });
+
+        // Menampilkan hasil ke dalam elemen HTML
+        document.getElementById('hasilKonversi').innerHTML = daftarHTML;
+    </script>
+
+</body>
+</html>
